@@ -1,0 +1,64 @@
+function nearest(tab)
+    local n = math.huge
+    local np = nil 
+    for i,v in pairs(tab) do
+        if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.Position).magnitude < n then
+            n = (v.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude
+            np = v
+        end
+    end
+    
+    return np
+end
+while wait() do 
+    local zombs = {}
+    for i,v in pairs(game:GetService("Workspace")["Zombie Storage"]:GetChildren()) do
+        if v:FindFirstChildOfClass("Humanoid") ~= nil and v:FindFirstChildOfClass("Humanoid").Health ~= 0 then
+        table.insert(zombs,v:FindFirstChild("Head"))
+        end
+    end
+    if nearest(zombs) ~= nil then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(217.5, 3.00238824, 556.499939, -1, 0, 0, 0, 1, 0, 0, 0, -1)
+        spawn(function()
+    local x = nearest(zombs)
+    if x.Parent:FindFirstChild("Humanoid") ~= nil then
+        local tools = game.Players.LocalPlayer.Backpack
+        local gun = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
+        for i,v in pairs(tools:GetChildren()) do
+            if v:FindFirstChild("GunController") then
+                gun = v
+            end
+        end
+        local A_1 = 
+        {
+            ["Tool"] = gun, 
+            ["RealTool"] = gun, 
+            ["LaserProperties"] = 
+        {
+            [1] = 
+        {
+            [1] = "Neon", 
+            [2] = BrickColor.new("New Yeller"), 
+            [3] = Vector3.new(0.39076966, 0.025563322, -0.920133412), 
+            [4] = x.CFrame, 
+            [5] = x.Position, 
+            [6] = 60, 
+            [7] = true, 
+            [8] = Vector3.new(-0.101539932, 0.00423417566, 0.994822443)
+        }
+        }, 
+            ["HumanoidTables"] = 
+        {
+            [1] = 
+        {
+            ["HeadHits"] = 1, 
+            ["THumanoid"] = x.Parent:FindFirstChild("Humanoid"), 
+            ["BodyHits"] = 0
+        }
+        }
+        }
+        local Event = game:GetService("ReplicatedStorage").Remotes.WeaponEvent
+        Event:FireServer(A_1)
+    end
+end) end
+end
